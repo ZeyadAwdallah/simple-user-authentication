@@ -19,7 +19,7 @@ interface User {
 }
 const USERS: User[] = [];
 
-// Create user in Stream Chat
+// Create user
 app.post('/register', async (req, res) => {
   const { email, password } = req.body;
 
@@ -55,7 +55,7 @@ app.post('/register', async (req, res) => {
     };
     USERS.push(user);
 
-    // Create user in Stream Chat
+    // Create user
     await client.upsertUser({
       id,
       email,
