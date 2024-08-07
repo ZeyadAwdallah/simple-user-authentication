@@ -17,9 +17,10 @@ interface User {
   email: string;
   hashed_password: string;
 }
-const USERS: User[] = [];
 
-// Create user
+const USERS: User[] = []; // In-memory store for users
+
+// Endpoint to register a new user
 app.post('/register', async (req, res) => {
   const { email, password } = req.body;
 
@@ -29,7 +30,7 @@ app.post('/register', async (req, res) => {
     });
   }
 
-  // Minlength 6
+  // Validate password length
   if (password.length < 6) {
     return res.status(400).json({
       message: 'Password must be at least 6 characters.',
@@ -46,8 +47,7 @@ app.post('/register', async (req, res) => {
 
   try {
     const hashed_password = hashSync(password, salt);
-    // Generate random id and push to in memory users
-    const id = Math.random().toString(36).substr(2, 9);
+    const id = Math.random().toString(36).substr(2, 9); // Generate a random user ID
     const user = {
       id,
       email,
@@ -55,14 +55,14 @@ app.post('/register', async (req, res) => {
     };
     USERS.push(user);
 
-    // Create user
+    // Create user in Stream Chat
     await client.upsertUser({
       id,
       email,
       name: email,
     });
 
-    // Create token for user
+    // Create a token for the user
     const token = client.createToken(id);
 
     return res.json({
@@ -72,14 +72,14 @@ app.post('/register', async (req, res) => {
         email: user.email,
       },
     });
-  } catch (err:any) {
+  } catch (err: any) {
     return res.json({
       message: err.message,
     });
   }
 });
 
-// Login user
+// Endpoint to log in an existing user
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const user = USERS.find((user) => user.email === email);
@@ -90,7 +90,8 @@ app.post('/login', async (req, res) => {
       message: 'Invalid credentials.',
     });
   }
-  // Create token for user
+
+  // Create a token for the user
   const token = client.createToken(user.id);
 
   return res.json({
