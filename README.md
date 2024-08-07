@@ -1,6 +1,5 @@
 
 # **User Authentication API with Stream Chat**
-
 ## **Overview**
 
 This is an Express.js application that provides user registration and login functionalities. It integrates with the Stream Chat API to create and manage users. Passwords are hashed using bcrypt for secure storage, and users are authenticated using tokens created by Stream Chat.
@@ -120,3 +119,4 @@ Authenticates an existing user.
     "message": "Error message"
   }
   ```
+---
